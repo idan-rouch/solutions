@@ -1,0 +1,21 @@
+# Temp/stray dirs
+0/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+
+# Local outputs
+out/
+
+# Secrets/config
+.env
+*.env
+
+# OS junk
+.DS_Store
+Thumbs.db
+

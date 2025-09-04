@@ -1,0 +1,27 @@
+Deprovision:
+	SCIM-managed 	= Yes
+	IdP Active 	= No
+	1P Active 	= Yes 	→ deprovision() via SCIM (don’t touch unmanaged users here).
+
+SCIM onboard (convert/attach, not create):
+	SCIM-managed 	= No
+	IdP Active 	= Yes
+	1P Active 	= Yes 	→ scim_onboard() (bring under SCIM management; no duplicate account).
+
+Provision (create):
+	SCIM-managed 	= No
+	IdP Active 	= Yes
+	1P Active 	= No (or not found in 1P) 	→ provision() via SCIM (create the 1P account).
+
+to_deprovision = SCIM-managed AND IdP inactive AND 1Password active
+
+to_scim_onboard = not SCIM-managed AND IdP active AND 1Password active
+
+to_provision = not in 1Password AND IdP active
+(+ keep: in_1p_not_in_idp = in 1Password but not in IdP)
+
+To test in-house, have the following users ready:
+- User1: suspended in Okta, and active in 1Password --> should show up in "deprovision"
+- User2: active in Okta, and active in 1Password (IdP-unmanaged) --> should show up in "SCIM Onboard"
+- User3: active in Okta, and missing in 1Password --> should show up in "provision"
+- User4: active in Okta, and active in 1Password (IdP-managed) --> should show up in "healthy" or not be flagged

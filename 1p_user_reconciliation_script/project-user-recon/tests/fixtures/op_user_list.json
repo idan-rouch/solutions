@@ -1,0 +1,8 @@
+[
+  {"id": "USR-1", "name": "Alice", "email": "alice@example.com", "state": "ACTIVE"},
+  {"id": "USR-2", "name": "Bob",   "email": "bob@example.com",   "state": "SUSPENDED"},
+  {"id": "USR-3", "name": "Eva",   "email": "eva@example.com",   "state": "DELETED"}
+  {"id": "USR-1", "name": "James", "email": "james@example.com", "state": "ACTIVE"},
+  {"id": "USR-2", "name": "Eddy",   "email": "eddy@example.com",   "state": "SUSPENDED"},
+  {"id": "USR-3", "name": "Debby",   "email": "debby@example.com",   "state": "DELETED"}
+]
