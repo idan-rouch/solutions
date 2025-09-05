@@ -80,6 +80,7 @@ OP_SERVICE_ACCOUNT_TOKEN=your-op-service-account-token
 ```
 
 ## Project Structure
+```
 .
 ├── 0
 ├── docs
@@ -119,41 +120,6 @@ OP_SERVICE_ACCOUNT_TOKEN=your-op-service-account-token
 └── tests
     ├── fixtures
     │   └── op_user_list.json
-    └── test_onepassword.py
-
-## Project Structure
-
-```
-.
-├── 0
-├── docs
-│   └── USER_GUIDE.md
-├── env.example
-├── Makefile
-├── out
-│   ├── in_1p_not_in_idp.csv
-│   ├── to_deprovision.csv
-│   ├── to_provision.csv
-│   └── to_scim_onboard.csv
-├── README.md
-├── requirements.txt
-├── run_recon.py
-├── src
-│   ├── __init__.py
-│   ├── __pycache__
-│   │   └── __init__.cpython-313.pyc
-│   └── recon
-│       ├── __init__.py
-│       ├── cli.py
-│       ├── engine.py
-│       ├── okta.py
-│       ├── onepassword.py
-│       ├── op_cli.py
-│       ├── scim.py
-│       └── util.py
-└── tests
-    ├── fixtures
-    │   └── op_user_list.json
     └── test_onepassword.py
 ```
 
