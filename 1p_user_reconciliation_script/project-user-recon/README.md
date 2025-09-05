@@ -1,5 +1,3 @@
-Yes, here is the entire content as a single, plain text block that you can copy and paste.
-
 ```text
 # 1Password ↔ Okta Reconciliation Tool
 
