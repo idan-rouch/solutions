@@ -21,13 +21,14 @@ A Python-based reconciliation and remediation tool for Okta and the 1Password SC
 - Optional: 1Password `op` CLI installed, requiring Owner or Admin rights for fallback operations.
 
 ## Installation
-
+```
 git clone <repo-url>
 cd project-user-recon
 python3 -m venv .venv && source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 cp .env.example .env
+```
 
 ## Environment Setup
 Copy the `.env.example` file to `.env` and populate it with your specific credentials. Ensure you use the SCIM Bridge base URL, which is the host that returns an HTTP 200 status at the `/ServiceProviderConfig` endpoint. Remember to keep your `.env` file out of version control (.gitignore).
