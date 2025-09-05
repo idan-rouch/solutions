@@ -1,4 +1,3 @@
-```text
 # 1Password ↔ Okta Reconciliation Tool
 
 A Python-based reconciliation and remediation tool for Okta and the 1Password SCIM Bridge. It detects mismatches, exports CSVs for auditing, and automates fixes like reprovisioning, deprovisioning, and SCIM onboarding.
@@ -48,7 +47,7 @@ Optional variables:
 - OP_SERVICE_ACCOUNT_TOKEN: A 1Password Service Account token (if extending beyond SCIM).
 
 Load env:
-```bash
+```
 export $(grep -v '^#' .env | xargs)
 ```
 
