@@ -52,18 +52,21 @@ export $(grep -v '^#' .env | xargs)
 ```
 
 Sign into 1Password and validate login:
-```bash
+```
 op signin [-f] # Or "eval $(op signin)"
 op whoami
 ```
 
 You can run these quick health/sanity checks to verify your credentials:
+```
 curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $OP_SCIM_BEARER_TOKEN" "$OP_SCIM_BASE_URL/ServiceProviderConfig"
 curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: SSWS $OKTA_API_TOKEN" "$OKTA_BASE_URL/api/v1/users?limit=1"
 python -c 'import sys, click; print("python:", sys.executable); import importlib.metadata as m; print("click:", m.version("click"))'
 python -m src.recon.cli --help
+```
 
 Example `.env` file:
+```
 OP_PATH=
 OP_MOCK=false
 OKTA_BASE_URL=https://your-okta-domain.okta.com
@@ -74,6 +77,7 @@ OP_SCIM_BEARER_TOKEN=your-scim-bearer-token
 OP_ACCOUNT=your-1password-account-domain
 OP_ADMIN_BASE_URL=https://api.your-region.1password.com
 OP_SERVICE_ACCOUNT_TOKEN=your-op-service-account-token
+```
 
 ## Project Structure
 .
@@ -119,57 +123,81 @@ OP_SERVICE_ACCOUNT_TOKEN=your-op-service-account-token
 
 ## Usage
 Always activate your virtual environment before running the tool:
+```
 source .venv/bin/activate
+```
 
 Show the CLI help menu for a list of all commands and options:
+```
 python -m src.recon.cli --help
+```
 
 List users from each service (useful for smoke tests):
+```
 python -m src.recon.cli list-okta
 python -m src.recon.cli list-1p
+```
 
 Run a dry-run reconciliation to see what actions would be taken. This is a read-only operation and will not make any changes. It will write CSVs to the specified directory.
+```
 python -m src.recon.cli recon-dryrun --csv-dir out
+```
 
 Reprovision a single user by re-adding them to the Okta SCIM group:
+```
 python -m src.recon.cli reprovision --email "user@example.com" --okta-group-id "$OKTA_SCIM_GROUP_ID" --wait-seconds 45 --interval 5
+```
 
 Batch reprovision multiple users from a CSV file:
+```
 python -m src.recon.cli reprovision-batch --csv users.csv --okta-group-id "$OKTA_SCIM_GROUP_ID"
+```
 
 Apply deprovisioning. This will first attempt to use SCIM. Use `--no-cli` to prevent it from falling back to the `op` CLI.
+```
 python -m src.recon.cli apply-deprovision --execute --csv-dir out --no-cli
+```
 
 Apply SCIM onboarding to existing 1Password users:
+```
 python -m src.recon.cli apply-scim-onboard --execute --okta-group-id "$OKTA_SCIM_GROUP_ID" --csv-dir out
+```
 
 ## Testing with curl
 Remember to URL-encode the `+` symbol in email addresses as `%2B`.
 
 Check if the SCIM service is reachable:
+```
 curl -s -H "Authorization: Bearer $OP_SCIM_BEARER_TOKEN" "$OP_SCIM_BASE_URL/ServiceProviderConfig" | jq
+```
 
 Look up a user in Okta by their login/email:
+```
 ENC="user%2Btag@example.com"
 curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" "$OKTA_BASE_URL/api/v1/users?search=profile.login%20eq%20%22$ENC%22" | jq
+```
 
 Look up a user in 1Password via SCIM:
+```
 ENC="user%2Btag@example.com"
 curl -s -H "Authorization: Bearer $OP_SCIM_BEARER_TOKEN" "$OP_SCIM_BASE_URL/Users?filter=userName%20eq%20%22$ENC%22" | jq -r '.Resources | length, (.[0]? | .id // empty), (.[0]? | .userName // empty)'
+```
 
 Check SCIM presence:
-```bash
+```
 ENC_EMAIL="user%40domain.com"
 curl -s -H "Authorization: Bearer $OP_SCIM_BEARER_TOKEN"   "$OP_SCIM_BASE_URL/Users?filter=userName%20eq%20%22$ENC_EMAIL%22" | jq
 ```
 
 Deactivate a user via SCIM PATCH request:
+```
 USER_ID="SCIM_ID"
 curl -s -X PATCH \
 -H "Authorization: Bearer $OP_SCIM_BEARER_TOKEN" \
 -H "Content-Type: application/scim+json" \
 "$OP_SCIM_BASE_URL/Users/$USER_ID" \
 --data '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"replace","value":{"active":false}}]}'
+```
 
 ## Common Issues
 - SCIM returns HTML/404: You are likely using the 1Password web UI host. Use the SCIM connector host URL instead.
@@ -182,5 +210,3 @@ curl -s -X PATCH \
 - `recon-dryrun` is a read-only command and completely safe to run.
 - `reprovision` is idempotent. Running it multiple times will not cause issues.
 - `apply-deprovision` makes state changes in 1Password. It's recommended to use `--no-cli` unless you specifically intend to use the CLI fallback.
-
-```
